@@ -1,15 +1,35 @@
 package day5;
 
-// Собственное исключение
 class LinkedListException extends RuntimeException {
     public LinkedListException(String message) {
         super(message);
     }
 }
 
+class Node<T> {
+    private T value;
+    private Node<T> next;
+
+    public Node(T value) {
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public Node<T> getNext() {
+        return next;
+    }
+
+    public void setNext(Node<T> next) {
+        this.next = next;
+    }
+}
+
 public class LinkedList<T> {
 
-    Node<T> root;
+    private Node<T> root;
     private int size = 0;
     private int maxSize = Integer.MAX_VALUE;
 
@@ -22,7 +42,6 @@ public class LinkedList<T> {
         this.maxSize = maxSize;
     }
 
-    // Добавление в конец
     public void add(T element) {
         if (size >= maxSize) {
             throw new LinkedListException("Превышен максимальный размер списка: " + maxSize);
@@ -31,13 +50,12 @@ public class LinkedList<T> {
         if (root == null) {
             root = new Node<>(element);
         } else {
-            Node<T> lastNode = findLast();  // <-- Добавили <T>
-            lastNode.setNext(new Node<>(element));  // <-- Добавили <>
+            Node<T> lastNode = findLast();
+            lastNode.setNext(new Node<>(element));
         }
         size++;
     }
 
-    // Добавление по индексу
     public void add(int index, T element) {
         if (index < 0 || index > size) {
             throw new LinkedListException("Индекс " + index + " вне диапазона. Размер списка: " + size);
@@ -63,9 +81,10 @@ public class LinkedList<T> {
         size++;
     }
 
-    private Node<T> findLast() {  // <-- Добавили <T>
-        if (root == null)
+    private Node<T> findLast() {
+        if (root == null) {
             return null;
+        }
 
         Node<T> lastNode = root;
         while (lastNode.getNext() != null) {
@@ -74,19 +93,18 @@ public class LinkedList<T> {
         return lastNode;
     }
 
-    public T get(int index) {  // <-- Изменили Object на T
+    public T get(int index) {
         if (index < 0 || index >= size) {
             throw new LinkedListException("Индекс " + index + " вне диапазона. Размер списка: " + size);
         }
 
-        Node<T> currentNode = root;  // <-- Добавили <T>
+        Node<T> currentNode = root;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.getNext();
         }
         return currentNode.getValue();
     }
 
-    // Удаление по индексу
     public T remove(int index) {
         if (index < 0 || index >= size) {
             throw new LinkedListException("Индекс " + index + " вне диапазона. Размер списка: " + size);
